@@ -1,107 +1,86 @@
-# Peterson mutual exclusion in Lean
+# Peterson's algorithm in Lean
 
-Two processes sharing a resource need an entry protocol that prevents them from
-using it together. This project reconstructs the two-process algorithm from
-Gary L. Peterson's 1981 paper and explains two checked Lean results.
+This is a study and Lean proofs of Gary L. Peterson's 1981 paper,
+[“Myths about the mutual exclusion problem”](https://doi.org/10.1016/0020-0190%2881%2990106-X).
+The repository contains a formal model of its two-process algorithm and proofs
+in Lean, a system for checking mathematical arguments. The accompanying notes
+explain how the algorithm works and why the proofs hold.
 
-This account describes the completed safety-and-conditional-progress learning
-artifact for version 1.0.0. The version and completion fields describe its scope;
-they do not certify a published release or owner acceptance of this public
-account. See [status](STATUS.md).
+Peterson's algorithm solves the mutual-exclusion problem: coordinating access
+to a shared resource so that two processes cannot use it at the same time.
+Each process records its intent in a shared flag; a third variable resolves
+contention when both want access. The processes run independently, and either
+can pause between operations. Establishing correctness means accounting for
+all the ways those operations can interleave.
 
-## Result
+The notes and proofs follow the two-process algorithm closely, including
+separate reads of the two parts of its waiting condition. They also make
+explicit the assumptions needed to turn the paper's description into a
+mathematical model.
 
-**Safety:** the two processes never occupy their critical sections together in
-any finitely reachable state. The checked declaration is
-`Peterson.peterson_mutual_exclusion` in [Safety.lean](Peterson/Safety.lean).
+## Results and scope
 
-**Conditional progress:** after any observation of a pending request, some
-process eventually makes a new entry, if participating protocol steps are not
-permanently neglected and critical-section work eventually finishes. The
-separate checked declaration is `Peterson.peterson_global_progress` in
-[Progress.lean](Peterson/Progress.lean). Someone already inside does not count
-as that new entry.
+The formalization proves two results:
 
-## Scope
+- **Mutual exclusion:** the processes cannot both be in their critical
+  sections, the portions of their programs that use the shared resource.
+- **Conditional progress:** once a request is pending, some process
+  eventually makes a new entry, assuming enabled protocol steps are not
+  neglected forever and critical-section work eventually finishes. This
+  includes allowing a process to clear its flag on exit.
 
-Both results concern two processes making at most one attempt each, individually
-atomic shared reads and writes in one sequence preserving program order, either
-initial tie-break value, and either fixed short-circuit wait-test order. Both
-processes use the same chosen order. A process may choose never to start.
+Both proofs concern a single passage through the algorithm: each process may
+make at most one attempt. The memory model is sequential consistency, with
+each shared read or write treated as an atomic operation. Both initial values
+of the tie-break variable are covered, as are both short-circuit orders for
+reading the wait condition; the processes use the same fixed order.
 
-Begin with [the algorithm and model](docs/algorithm.md), then
-[the proof ideas](docs/proofs.md). The exact definitions remain in
+Safety does not require fairness. Progress does, and it gives no bound on
+waiting time. The formalization does not cover repeated requests, weak-memory
+execution, a compiled implementation, or the paper's n-process construction.
+The [proof notes](docs/proofs.md) explain the progress assumptions in detail.
+
+## Reading the proof
+
+[The algorithm and model](docs/algorithm.md) introduces the state and operations
+and follows an execution in which both processes request access.
+[The proof notes](docs/proofs.md) develop the safety invariant and the argument
+for eventual progress.
+
+The two theorems are
+[`peterson_mutual_exclusion`](Peterson/Safety.lean) and
+[`peterson_global_progress`](Peterson/Progress.lean). Their definitions are in
 [Specification.lean](Peterson/Specification.lean) and
 [ProgressSpecification.lean](Peterson/ProgressSpecification.lean).
+[Related work](docs/related-work.md) describes the other formalizations consulted
+and the use of CSLib.
 
-## Assumptions
+The reconstruction used an author-marked electronic restoration of the paper;
+its identity with the publisher's version has not been established. The
+[model notes](docs/algorithm.md) distinguish the source description from the
+choices made in this formalization.
 
-The memory model is sequential consistency: each shared operation takes effect
-as one action in the common sequence. The two reads of the wait condition are
-separate actions, so another process can act between them.
+## Building
 
-Safety needs no fairness assumption. Progress additionally requires weak
-fairness for participating protocol steps, including the exit flag clear, and
-eventual completion of each critical section. Fairness promises a process a
-step, not a successful read or any upper bound on delay. These explicit
-sufficient premises are project interpretations of the environment, not exact
-formulas supplied by the paper. [The progress explanation](docs/proofs.md)
-spells out their roles.
+With `elan` installed, run from the repository root:
 
-## Non-goals
+```sh
+lake build Peterson.Safety Peterson.Progress
+```
 
-There is no waiting-time or step bound, repeated-client theorem, weak-memory
-result, executable-code refinement or proof of the paper's n-process
-construction. The checked progress conclusion is a new entry by some process.
-A reviewed mathematical argument also gives eventual entry by the particular
-requester in this one-passage model; that consequence has no separately
-kernel-checked corollary here.
-
-## Verification
-
-The authoritative development passed clean tracked-source replay and
-independent source/contract audits before its learning artifact was accepted
-on 2026-09-08. The principal theorem paths report only the standard Lean
-assumptions `propext`, `Classical.choice` and `Quot.sound`. No project placeholder,
-unclassified custom axiom or unsafe proof path was accepted. Verified dependency
-build caches were reused. These are prior development results. The
-[public claim contract](publication-checks.toml) identifies the exact declarations
-to check in this tree. [Verification details](docs/verification.md) separate
-compiler checks, source faithfulness and their limits; this page is not a
-public-root build report.
-
-## Source relationship
-
-The governing work is Gary L. Peterson, "Myths about the mutual exclusion
-problem," Information Processing Letters 12(3), 1981, pages 115–116,
-[DOI 10.1016/0020-0190(81)90106-X](https://doi.org/10.1016/0020-0190%2881%2990106-X).
-The reconstruction used an author-marked electronic restoration; identity with
-the publisher facsimile has not been established. The paper itself is not part
-of this artifact. [The model explanation](docs/algorithm.md) distinguishes the
-source algorithm from the explicit execution choices made here.
+The project pins Lean `v4.34.0-rc2` and its dependencies. The
+[verification guide](docs/verification.md) gives the commands for inspecting
+the theorem statements and their logical assumptions, along with the limits
+of those checks. [STATUS.md](STATUS.md) records the version and verification
+history.
 
 ## AI assistance
 
-AI models produced the research, explanations, tooling and Lean formalization.
-Erik Peterson started and directed the project; he did not author those
-artifacts. The MIT license names him as holder of any applicable rights he
-holds, including rights assigned under applicable tool terms. This does not
-assert that every model-generated output is copyrightable or grant rights in
-third-party material. The project-name citation is bibliographic credit.
+Erik Peterson initiated and directed this project. The research, prose,
+tooling, and Lean proofs are model-generated. Lean checked the proofs;
+separate AI agents reviewed the model against the source and examined the
+explanations. Those reviews are fallible and can share errors. In particular,
+Lean's acceptance of a proof does not establish that its model faithfully
+represents the paper. There has been no independent human mathematical review.
 
-Model-generated outputs were treated as untrusted: saved Lean sources underwent kernel checks,
-and separate agents audited correspondence with the source and accepted
-contract. Separate-agent review can still share blind spots; it is not a formal
-proof of source faithfulness or an independent human mathematical review.
-Public-account review is a separate check on the explanations presented here.
-
-## Reproduction
-
-The public tree places its Lean project at the repository root, with Lean
-`v4.34.0-rc2`, CSLib `33e7370a94646c19176dc847f7514559bc5e06fb`, and the full
-transitive graph in `lake-manifest.json`. Run
-`lake build Peterson.Safety Peterson.Progress` from that root. The
-[reproduction guide](docs/verification.md) gives the exact theorem probe and explains what these commands establish.
-
-For design precedents and contribution status, see
-[related work and upstream disposition](docs/related-work.md).
+Licensed under [MIT](LICENSE).

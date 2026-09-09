@@ -10,5 +10,6 @@
   "version": "1.0.0",
   "license": "MIT",
   "type": "software",
-  "abstract": "AI models produced this formalization and its explanations. Erik Peterson started and directed the project. The project checks two-process one-passage safety and conditional global progress in its stated sequentially consistent model. See the README for generation, verification and rights context."
+  "abstract": "AI models produced this formalization and its explanations. Erik Peterson started and directed the project. The project checks two-process one-passage safety and conditional global progress in its stated sequentially consistent model. See the README for generation, verification and rights context.",
+  "repository-code": "https://github.com/erik-megarad/peterson-algorithm"
 }
