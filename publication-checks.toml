@@ -1,0 +1,15 @@
+schema_version = 1
+
+[lean]
+build_modules = ["Peterson.Safety", "Peterson.Progress"]
+source_paths = ["lakefile.lean", "Peterson/Specification.lean", "Peterson/Safety.lean", "Peterson/ProgressSpecification.lean", "Peterson/Progress.lean"]
+
+[[lean.claims]]
+record_id = "peterson-mutual-exclusion"
+module = "Peterson.Safety"
+declarations = ["Peterson.peterson_mutual_exclusion"]
+
+[[lean.claims]]
+record_id = "peterson-global-progress"
+module = "Peterson.Progress"
+declarations = ["Peterson.peterson_global_progress"]

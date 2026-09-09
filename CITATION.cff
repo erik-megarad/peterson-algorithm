@@ -1,0 +1,14 @@
+{
+  "cff-version": "1.2.0",
+  "message": "Cite this model-generated project by the project name below. This is bibliographic credit, not a claim of human authorship.",
+  "title": "Peterson’s 1981 Mutual-Exclusion Algorithm",
+  "authors": [
+    {
+      "name": "Peterson Algorithm Formalization Project (model-generated)"
+    }
+  ],
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "software",
+  "abstract": "AI models produced this formalization and its explanations. Erik Peterson started and directed the project. The project checks two-process one-passage safety and conditional global progress in its stated sequentially consistent model. See the README for generation, verification and rights context."
+}
