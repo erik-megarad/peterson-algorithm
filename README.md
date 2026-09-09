@@ -99,9 +99,9 @@ Public-account review is a separate check on the explanations presented here.
 
 The public tree places its Lean project at the repository root, with Lean
 `v4.34.0-rc2`, CSLib `33e7370a94646c19176dc847f7514559bc5e06fb`, and the full
-transitive graph in `lake-manifest.json`. Run `lake build Peterson` from that
-root. The [reproduction guide](docs/verification.md) gives the exact theorem
-probe and explains what these commands establish.
+transitive graph in `lake-manifest.json`. Run
+`lake build Peterson.Safety Peterson.Progress` from that root. The
+[reproduction guide](docs/verification.md) gives the exact theorem probe and explains what these commands establish.
 
 For design precedents and contribution status, see
 [related work and upstream disposition](docs/related-work.md).

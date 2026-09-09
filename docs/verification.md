@@ -12,10 +12,10 @@ under their own licenses; they are not copied into this public account.
 After installing the Lean toolchain manager elan, use a shell at the root of
 the assembled public checkout. The pinned toolchain and dependency downloads
 require access to their distribution services on a first build. Build the
-library explicitly:
+two claim modules explicitly:
 
 ```sh
-lake build Peterson
+lake build Peterson.Safety Peterson.Progress
 ```
 
 The [public claim contract](../publication-checks.toml) lists the selected
