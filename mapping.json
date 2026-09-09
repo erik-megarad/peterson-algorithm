@@ -1,0 +1,112 @@
+{
+  "schema_version": 2,
+  "outputs": {
+    "Challenge.lean": {
+      "sha256": "1cef3495a34aed0a6d2461b80a57347471ebf43048de955ee122d2dc4b24d9e7",
+      "bytes": 11407,
+      "lines": 296,
+      "segments": [
+        {
+          "output_interval": [
+            0,
+            264
+          ],
+          "generated": "imports-and-notice"
+        },
+        {
+          "output_interval": [
+            264,
+            7484
+          ],
+          "source_path": "Peterson/Specification.lean",
+          "source_sha256": "90bb8d12e70a4f9dbfabe2c5dd847a56334075c5b7c1e3822796aed59fa28a49",
+          "source_interval": [
+            45,
+            7265
+          ]
+        },
+        {
+          "output_interval": [
+            7484,
+            11087
+          ],
+          "source_path": "Peterson/ProgressSpecification.lean",
+          "source_sha256": "3fa0c13d33e9dde4e4bcee42392c29328f72aa9d7c6c6e347ccdc8253f894f06",
+          "source_interval": [
+            84,
+            3687
+          ]
+        },
+        {
+          "output_interval": [
+            11087,
+            11407
+          ],
+          "generated": "exact-two-target-holes"
+        }
+      ]
+    },
+    "Solution.lean": {
+      "sha256": "f6467f49ffdbfe0f0a6e80ed1bb3eda0596b0f859428deaa33c812e64249b88a",
+      "bytes": 67219,
+      "lines": 1541,
+      "segments": [
+        {
+          "output_interval": [
+            0,
+            264
+          ],
+          "generated": "imports-and-notice"
+        },
+        {
+          "output_interval": [
+            264,
+            7484
+          ],
+          "source_path": "Peterson/Specification.lean",
+          "source_sha256": "90bb8d12e70a4f9dbfabe2c5dd847a56334075c5b7c1e3822796aed59fa28a49",
+          "source_interval": [
+            45,
+            7265
+          ]
+        },
+        {
+          "output_interval": [
+            7484,
+            11087
+          ],
+          "source_path": "Peterson/ProgressSpecification.lean",
+          "source_sha256": "3fa0c13d33e9dde4e4bcee42392c29328f72aa9d7c6c6e347ccdc8253f894f06",
+          "source_interval": [
+            84,
+            3687
+          ]
+        },
+        {
+          "output_interval": [
+            11087,
+            27549
+          ],
+          "source_path": "Peterson/Safety.lean",
+          "source_sha256": "b3ea0eb771fc1efea0952594b26ac5ce1d93ea11230a7f7ae9d55560c2addc8e",
+          "source_interval": [
+            30,
+            16492
+          ]
+        },
+        {
+          "output_interval": [
+            27549,
+            67219
+          ],
+          "source_path": "Peterson/Progress.lean",
+          "source_sha256": "54ad7fe0bfb76efd5309b3043519574bbf551de96bf7be19123e7d79dd1c36e0",
+          "source_interval": [
+            38,
+            39708
+          ]
+        }
+      ]
+    }
+  }
+}

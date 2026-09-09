@@ -70,3 +70,20 @@ development acceptance does not establish those verdicts. Separate AI-agent
 audits may share errors and are not human mathematical review.
 
 See [status](../STATUS.md), [proof ideas](proofs.md) and [the overview](../README.md).
+
+## Registry verification package
+
+The root [formalization.yaml](../formalization.yaml) identifies Erik Peterson as
+human author and discloses model production and agent review. The generated
+[Challenge](../Challenge.lean) contains the same specifications and exactly two
+intentional statement holes. It is a verifier input, not a proved module.
+The generated [Solution](../Solution.lean) contains the complete specifications
+and original proofs; [mapping.json](../mapping.json) accounts for every assembled
+byte. Neither file imports the other or replaces the authoritative `Peterson`
+modules. Build the assembled proof with `lake build Solution`.
+
+[comparator.json](../comparator.json) selects both principal results and permits
+only `propext`, `Quot.sound`, and `Classical.choice`. The pinned Palomar verifier
+has locally accepted these exact Challenge/Solution bytes with Comparator,
+NanoDa and Lean's default kernel. Local verification is separate from remote
+intake, editorial review, submission and registration; none is implied here.

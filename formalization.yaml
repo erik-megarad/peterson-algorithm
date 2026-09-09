@@ -1,0 +1,153 @@
+# Authored input for export to formalization.yaml at the public project root.
+# Exact generated Challenge/Solution bytes passed local full verification.
+version: v0.4
+project:
+  name: Peterson’s 1981 Mutual-Exclusion Algorithm
+  description: >-
+    Lean proofs of mutual-exclusion safety and conditional global progress for
+    the two-process algorithm in Gary L. Peterson's 1981 article. Each process
+    makes at most one passage. Shared reads and writes are individually atomic
+    under sequential consistency. Both initial tie-break values and both uniform
+    fixed short-circuit wait orders are covered. Safety excludes simultaneous
+    critical-section occupancy in every finitely reachable state, without
+    fairness. Progress says that a pending request leads to a new entry by some
+    process at that observation or later, provided participating protocol steps,
+    including exit flag clearing, are not permanently neglected and
+    critical-section occupants eventually finish their work. Starting remains
+    optional. No waiting bound, repeated-client, weak-memory, executable-code
+    refinement, or n-process result is claimed.
+  authors:
+    - Erik Peterson
+  responsible_maintainers:
+    - Erik Peterson
+  license: MIT
+  authorship_note: >-
+    Erik Peterson initiated and directed the project and is its human author
+    for registry credit and responsibility, as explicitly designated by him.
+    AI models produced the research, prose, tooling and Lean formalization.
+    This does not claim human proof production or independent human mathematical
+    review. CITATION.cff retains the accepted bibliographic credit to Peterson
+    Algorithm Formalization Project (model-generated). These are distinct
+    registry and citation conventions; Gary L. Peterson authored the source paper.
+sources:
+  - title: Myths about the mutual exclusion problem
+    authors:
+      - Gary L. Peterson
+    id: https://doi.org/10.1016/0020-0190(81)90106-X
+    type: paper
+    location: Information Processing Letters 12(3), 1981, pages 115–116; Figure 1 and accompanying prose
+    relationship: adapts
+    author_endorsement: not-contacted
+    note: >-
+      Source-based reconstruction of the two-process algorithm, with explicit
+      single-passage scope, individually atomic operations, uniform fixed
+      short-circuit read orders, and conditional scheduling/completion premises.
+      These choices narrow and disambiguate the paper's informal claims; the
+      progress statement is an explicit project contract, not a transcription
+      of a separately numbered source theorem. The inspected source was an
+      author-marked electronic restoration; identity with the publisher's
+      version has not been established. No source PDF, transcription or image
+      is included, and the project's MIT license does not license that article.
+related_formalizations:
+  - id: https://jamesrwilcox.com/SharedMem.html
+    relationship: other
+    note: >-
+      James Wilcox's 2015 Coq account informed target comparison through its
+      separate reads and turn convention. This is a design comparison, not a
+      port or a claim of proof-source reuse. It was not locally replayed.
+  - id: https://github.com/Frisk17/Petersons-s-Algorithm/tree/cf4c3322d8f661b277ca66d8087649a0c74bca6c
+    relationship: other
+    note: >-
+      Prior Lean development inspected at the pinned revision for comparison;
+      its guard is atomic as a whole. It was not locally replayed. This project
+      makes no first-Lean-proof or novelty claim. See docs/related-work.md for
+      the bounded survey and its limits.
+classification:
+  arxiv: [cs.LO, cs.DC]
+status:
+  scope: >-
+    The two principal results below concern the accepted two-process,
+    one-passage model. Counts and axioms report the checked authoritative
+    proof paths described in docs/verification.md. The generated Challenge has
+    exactly two intentional statement holes outside those proof paths. Its
+    paired Solution has none. Comparator, NanoDa and Lean default kernel locally
+    accepted these exact package bytes; remote intake and editorial review
+    remain separate.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: [propext, Classical.choice, Quot.sound]
+  main_results:
+    - declaration: Peterson.peterson_mutual_exclusion
+      file: Peterson/Safety.lean
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound]
+      literature_dependencies: []
+      comparator_config: comparator.json
+    - declaration: Peterson.peterson_global_progress
+      file: Peterson/Progress.lean
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound]
+      literature_dependencies: []
+      comparator_config: comparator.json
+automation:
+  methods:
+    - method: agent
+      framework: Codex
+      tool_setup: >-
+        AI agents reconstructed the source, prepared explanations and tooling,
+        and generated Lean proofs under owner-directed bounded tasks. Lean
+        compilation, theorem-specific axiom checks and clean source replays
+        supplied proof-integrity evidence; Lean Beam supported interactive work.
+    - method: agent
+      framework: Codex
+      tool_setup: >-
+        Separate AI agents reviewed source/model correspondence, the temporal
+        contract, final proofs and reader explanations. Agent review is fallible
+        and can share errors with generation.
+  notes: >-
+    Erik Peterson directed project scope and accepted the learning artifacts.
+    Material expression and formal proofs are model-generated. Exact model
+    identifiers, aggregate costs and per-phase timings are not reconstructed
+    here. Kernel checking and agent source review answer different questions;
+    neither is independent human mathematical review.
+fidelity:
+  divergences: >-
+    The source's two-process algorithm is modeled with explicit separate shared
+    reads/writes, both fixed short-circuit orders used uniformly by both
+    processes, and at most one attempt per process. Conditional global progress
+    assumes weak fairness for participating protocol steps including exit and
+    eventual completion of critical work. It guarantees a new entry by some
+    process, not a separately checked per-request corollary. Repeated attempts,
+    bounded waiting, weak memory, executable refinement and the n-process
+    construction are excluded. The electronic restoration/publisher identity
+    gap remains. See docs/algorithm.md and docs/proofs.md.
+review:
+  status: agent-reviewed
+  reviewers:
+    - Separate AI review agents operating through Codex
+  notes: >-
+    Source-to-model and final progress-contract audits, theorem-specific Lean
+    trust checks and clean tracked-source replay are recorded in the development
+    history; docs/verification.md explains their scope. No independent human
+    mathematical review has occurred. This reports prior development review,
+    not a Palomar editorial verdict. Subsequent local package verification
+    passed both NanoDa and the Lean default kernel as described above.
+alignment:
+  namespace: Peterson
+  statements:
+    - source: Figure 1 and its mutual-exclusion discussion
+      lean: Peterson.peterson_mutual_exclusion
+      module: Peterson/Safety.lean
+      status: proved
+      note: Finite-reachability safety in the explicitly scoped model.
+    - source: Figure 1 and its progress discussion
+      lean: Peterson.peterson_global_progress
+      module: Peterson/Progress.lean
+      status: proved
+      note: >-
+        Adapted conditional global progress contract with explicit protocol
+        fairness and critical-work completion premises, as stated above.
+acknowledgements: >-
+  Lean, CSLib and its pinned dependency graph supply the proof infrastructure.
+  CSLib LTS and OmegaExecution provide execution abstractions. No upstream
+  acceptance or maintainer endorsement is implied.
