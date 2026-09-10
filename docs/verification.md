@@ -52,8 +52,12 @@ only `propext`, `Classical.choice`, and `Quot.sound` on the principal paths.
 These are standard Lean logical assumptions concerning proposition equality,
 classical choice, and quotient equality. Project-local `sorry`, `admit`, custom
 axioms, and unsafe proof escapes were rejected by the separate source/trust
-check. The public qualification tool repeats source coverage, build, theorem
-kind, and exact axiom classification against the exported bytes.
+check. Public qualification establishes source coverage, build, theorem kind,
+and exact axiom classification for exported proof inputs, reusing validated
+evidence when those inputs match. Routine release verification compares expected
+file bytes, manifest hashes and the Git diff; it does not repeat compilation
+solely to demonstrate repeatability. Reused evidence is recorded as reused,
+not as a fresh compiler run.
 
 ## Inspect the CSLib semantics
 
