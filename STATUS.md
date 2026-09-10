@@ -4,40 +4,53 @@ Publication version: 1.0.0
 Publication status: complete
 Corrects: none
 
-These fields describe the completed safety-and-conditional-progress artifact
-and its version identity. They do not certify a published tag or owner
-acceptance of this public account.
+This candidate covers the completed core Peterson results. On 2026-09-10 the
+public remote had `main` at `5afd7f2cfc96072c6cfbd08f444e94d826bc28b0`
+and no tags. Version `1.0.0` therefore remains available for the first immutable
+release. Earlier commits bearing that candidate version and their historical
+owner acceptance cover only the former two-result bytes; they do not accept,
+qualify, or publish this expanded packet.
 
 ## Verification
 
-The two principal results are `Peterson.peterson_mutual_exclusion` and
-`Peterson.peterson_global_progress`. Their authoritative development passed
-clean tracked-source replay, theorem-path trust checks and separate faithfulness
-audits. The completed learning artifact was accepted on 2026-09-08. Dependency
-build caches were reused; this was not a build of every dependency from scratch.
+The six claim records map to exact declarations in
+[publication-checks.toml](publication-checks.toml). The authoritative private
+development separately passed clean Lean builds, theorem-path axiom checks,
+source scans, and independent semantic review for each model boundary. The
+principal theorem paths report only Lean's standard `propext`,
+`Classical.choice`, and `Quot.sound` assumptions. Dependency build caches were
+reused in those checks.
 
-The [public claim contract](publication-checks.toml) names the two declarations
-and their modules for checks of this tree. The [verification guide](docs/verification.md)
-gives reproduction commands and distinguishes development evidence from
-public-root qualification. This status page is not a build report, content-review
-certificate or publication authorization.
+Release requires revision-bound independent privacy, redistribution,
+claim-faithfulness, and public-account review, followed by qualification of the
+exact exported root. The private release evidence records whether those gates
+passed for a particular source revision. This page does not assert their result
+for these bytes and is not itself a review verdict, build report, owner
+acceptance, or publication authorization.
 
 ## Limitations
 
-Both results cover two processes, one passage, sequential consistency,
-individually atomic shared operations, both permitted initial turn values and
-either fixed short-circuit read order shared by the two processes. Safety alone
-promises no progress. Progress requires weak fairness of participating protocol
-steps, including exit flag clearing, and eventual completion of critical work.
-Its checked conclusion is some new entry after a pending request, with no delay
-bound. Repeated clients, weak memory, n processes and executable refinement are
-outside this result.
+The one-passage two-process model covers both source-permitted initial `turn`
+values and both uniform fixed short-circuit read orders. Its progress theorem
+guarantees a new entry by some process, not service of a named request.
 
-Source review uses an electronic restoration, without a demonstrated
-publisher-facsimile equivalence. Lean validates the encoded propositions, not
-that historical correspondence. AI-assisted review is fallible. Upstream
-acceptance, publication authorization and paper redistribution rights are not
-implied by successful proof checking or learning-artifact acceptance.
+The repeated model adds optional private restart only after the exit flag write.
+Its safety theorem needs no fairness. Its per-request theorem and bounded-service
+corollary require protocol fairness and eventual critical-work completion. The
+sharp overtaking bound counts peer entry events from a request's flag write:
+zero before that request's `turn` write, at most one overall, with one achieved
+by checked witnesses for both orders, both actors, and both initial turns.
 
-Read the [result](README.md), [algorithm](docs/algorithm.md),
-[proof ideas](docs/proofs.md) and [related work](docs/related-work.md).
+The n-process model covers every finite n at least two, one passage per process,
+and ascending individually atomic peer scans. `level_capacity` is a finite-trace
+capacity theorem used to derive mutual exclusion. No n-process progress,
+repeated-use, arbitrary scan-order, weak-memory, executable refinement, or
+wall-clock bound is claimed.
+
+Source review uses an electronic restoration without established
+publisher-facsimile identity. AI-assisted source and semantic review is not
+independent human mathematical review. The repository's MIT license does not
+license the source paper or fetched dependencies.
+
+Read the [overview](README.md), [models](docs/algorithm.md), [proof guide](docs/proofs.md),
+[verification guide](docs/verification.md), and [related work](docs/related-work.md).

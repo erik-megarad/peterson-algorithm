@@ -24,22 +24,23 @@ investigation. These references report the earlier inspection; they do not
 claim a new assessment of the current hosted artifacts. No third-party proof
 source is reproduced on this page.
 
-The public account claims the particular model and two results described in
-[the overview](../README.md); it makes no novelty or best-proof claim. Structured
+The public account claims only the six explicitly mapped result families described
+in [the overview](../README.md); it makes no novelty or best-proof claim. Structured
 references are included in the [bibliography](../corpus/bibliography.bib).
 
 ## Library reuse and contribution status
 
-The pinned CSLib dependency supplies `LTS` and `OmegaExecution`. The source-close
-state machine, pending/entry definitions, fairness interpretation, finite-write
-argument and both read-order proofs remain specific to this Peterson model.
+The pinned CSLib dependency supplies `LTS`, finite-trace machinery, and
+`OmegaExecution`. Mathlib supplies ordinary finite-set cardinality and arithmetic
+support for the n-process proof. The source-close state machines, request and
+entry observers, fairness interpretation, n-process scan history, and overtaking
+count remain specific to this investigation.
 Importing library abstractions does not establish that the resulting modules
 have an agreed upstream home.
 
-The 2026-09-08 local disposition retained the progress modules locally. No
-maintainer placement agreement, new upstream packaging qualification or accepted
-CSLib contribution was recorded. Prior safety packaging experiments do not
-qualify the later progress modules. A future contribution needs a fresh check
+The local dispositions retain all project-specific modules here. No maintainer
+placement agreement, upstream packaging qualification, or accepted CSLib
+contribution was recorded. A future contribution needs a fresh check
 of community scope, APIs and contribution requirements, accurate authorship and
 reuse attribution, suitable human contributor readiness, and separate permission
 to contact maintainers or submit.

@@ -9,7 +9,3 @@ require cslib from git
   "33e7370a94646c19176dc847f7514559bc5e06fb"
 
 lean_lib Peterson
-
--- Registry packaging modules; Challenge contains only the two statement holes.
-lean_lib Challenge
-lean_lib Solution

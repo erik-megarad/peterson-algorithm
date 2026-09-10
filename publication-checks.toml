@@ -1,8 +1,41 @@
 schema_version = 1
 
 [lean]
-build_modules = ["Peterson.Safety", "Peterson.Progress", "Solution"]
-source_paths = ["Challenge.lean", "Solution.lean", "lakefile.lean", "Peterson/Specification.lean", "Peterson/Safety.lean", "Peterson/ProgressSpecification.lean", "Peterson/Progress.lean"]
+build_modules = [
+  "Peterson.Safety",
+  "Peterson.Progress",
+  "Peterson.Repeated.Safety",
+  "Peterson.Repeated.Progress",
+  "Peterson.NProcessCapacity",
+  "Peterson.Repeated.OvertakingExamples",
+  "Peterson.Verification",
+  "Peterson.NProcessVerification",
+]
+source_paths = [
+  "lakefile.lean",
+  "Peterson/Specification.lean",
+  "Peterson/Safety.lean",
+  "Peterson/TraceTests.lean",
+  "Peterson/ProgressSpecification.lean",
+  "Peterson/Progress.lean",
+  "Peterson/ProgressExamples.lean",
+  "Peterson/Repeated/Specification.lean",
+  "Peterson/Repeated/Safety.lean",
+  "Peterson/Repeated/TraceTests.lean",
+  "Peterson/Repeated/ProgressHelpers.lean",
+  "Peterson/Repeated/Progress.lean",
+  "Peterson/Repeated/ProgressExamples.lean",
+  "Peterson/Repeated/OvertakingSpecification.lean",
+  "Peterson/Repeated/Overtaking.lean",
+  "Peterson/Repeated/OvertakingExamples.lean",
+  "Peterson/NProcess.lean",
+  "Peterson/NProcessHistory.lean",
+  "Peterson/NProcessScan.lean",
+  "Peterson/NProcessExamples.lean",
+  "Peterson/NProcessCapacity.lean",
+  "Peterson/Verification.lean",
+  "Peterson/NProcessVerification.lean",
+]
 
 [[lean.claims]]
 record_id = "peterson-mutual-exclusion"
@@ -13,3 +46,29 @@ declarations = ["Peterson.peterson_mutual_exclusion"]
 record_id = "peterson-global-progress"
 module = "Peterson.Progress"
 declarations = ["Peterson.peterson_global_progress"]
+
+[[lean.claims]]
+record_id = "peterson-repeated-safety"
+module = "Peterson.Repeated.Safety"
+declarations = ["Peterson.Repeated.repeated_mutual_exclusion"]
+
+[[lean.claims]]
+record_id = "peterson-repeated-request-entry"
+module = "Peterson.Repeated.Progress"
+declarations = ["Peterson.Repeated.repeated_request_entry"]
+
+[[lean.claims]]
+record_id = "peterson-n-process-safety"
+module = "Peterson.NProcessCapacity"
+declarations = ["Peterson.NProcess.level_capacity", "Peterson.NProcess.arbitrary_mutual_exclusion"]
+
+[[lean.claims]]
+record_id = "peterson-repeated-overtaking"
+module = "Peterson.Repeated.OvertakingExamples"
+declarations = [
+  "Peterson.Repeated.repeated_overtaking_bound",
+  "Peterson.Repeated.repeated_pre_turn_zero",
+  "Peterson.Repeated.repeated_after_turn_bound",
+  "Peterson.Repeated.repeated_bounded_service",
+  "Peterson.Repeated.repeated_overtaking_sharp",
+]

@@ -1,100 +1,89 @@
-# Why the two results hold
+# Why the six results hold
 
-## Safety needs more than the final claim
+## One-passage safety
 
-The checked safety theorem in [Safety.lean](../Peterson/Safety.lean) applies to
-every finite execution of the two-process, one-passage, sequentially consistent
-model, with either initial turn and either fixed read order. It requires no
-scheduling fairness. Its proof maintains an invariant: facts true initially
-and preserved by each atomic action.
+[Safety.lean](../Peterson/Safety.lean) preserves an invariant over every atomic
+step. A process in the interested control range has a true flag. A process past
+its wait excludes its own identity from `turn` when its peer has written turn
+and not yet cleared its flag. If both processes were critical, the two symmetric
+instances would exclude both possible turn values. Finite-trace induction turns
+the one-step argument into `Peterson.peterson_mutual_exclusion` for every
+reachable state. No fairness is used.
 
-The invariant in [Specification.lean](../Peterson/Specification.lean) relates
-shared memory to current control positions. First, a process that has announced
-interest but not cleared its flag has a true flag. Second, if A has passed its
-wait but not cleared its flag, and B has written turn but not cleared its flag,
-turn cannot name A. Both clauses apply with the actors exchanged.
+## Conditional one-passage progress
 
-The second fact describes current passage ranges, not whether a write happened
-at any time in the past. Once B clears its flag, A can later write A to turn
-and enter on B's false flag without contradicting the invariant.
+`Peterson.peterson_global_progress` in [Progress.lean](../Peterson/Progress.lean)
+says that some new entry follows a pending observation when continuously enabled
+protocol work is weakly fair and every critical occupant eventually finishes.
+Each one-passage process performs only finitely many shared writes, so a suffix
+eventually has stable shared memory. Fairness rules out a process remaining at
+an enabled write or read forever; critical completion plus fair exit rules out
+a permanent occupant. A remaining reader eventually sees a permanently
+favorable flag or turn. The two read orders need separate handling because an
+old unfavorable first read may already be stored in control. The conclusion
+does not name the requester and gives no delay bound.
 
-Initially the relevant control ranges are empty. Preservation checks the
-individual writes and each read outcome. A successful turn read supplies the
-needed tie-break fact directly. For a successful flag read in either order,
-the peer's false flag rules out its being in the range from writing turn through
-waiting to clear its flag: the first invariant clause would require a true flag
-there. The entering process therefore has no new tie-break requirement against
-that peer. The peer's tie-break clause also remains valid, since the entering
-process was already in the turn-written range before this read. This argument
-uses the state at the individual flag read, even when it is the second test;
-the proof never substitutes an atomic two-read test.
+## Repeated safety
 
-If both processes were critical, each would satisfy the second clause's
-premises. Turn would then be neither A nor B. Its type permits only those two
-values, giving a contradiction. Induction over reachable transitions makes this
-argument apply to arbitrarily long finite executions, not just explored examples.
+[Repeated/Safety.lean](../Peterson/Repeated/Safety.lean) keeps the same invariant.
+Every protocol edge is an old step, and restart moves privately between two
+control points outside all invariant ranges. Thus both kinds of repeated edge
+preserve the invariant, yielding
+`Peterson.Repeated.repeated_mutual_exclusion`. Checked traces in
+[Repeated/TraceTests.lean](../Peterson/Repeated/TraceTests.lean) exercise a
+complete restart and multiple passages; they are behavioral examples, not the
+unbounded proof.
 
-## The extra premises for progress
+## Per-request lockout freedom
 
-The separate theorem in [Progress.lean](../Peterson/Progress.lean) guarantees a
-new entry by some process after every pending observation. It uses the same
-one-passage model and both read orders, plus the exact predicates in
-[ProgressSpecification.lean](../Peterson/ProgressSpecification.lean).
+`Peterson.Repeated.repeated_request_entry` in
+[Repeated/Progress.lean](../Peterson/Repeated/Progress.lean) follows one request
+from its flag-write tick. Until entry, its pending state persists across peer
+steps, padding, and peer restarts. Fairness supplies the requester's next
+protocol operations. If the peer later writes turn, that write permanently
+favors the requester while it remains a reader. If the peer never writes turn,
+turn is constant; fairness and critical completion eventually make the peer's
+flag false when the constant turn is unfavorable. Either case forces the
+requester through a favorable read. The first later entry serves the same
+request. [Repeated/ProgressExamples.lean](../Peterson/Repeated/ProgressExamples.lean)
+checks repeated service and shows why each liveness premise matters.
 
-`ProtocolFair` says that, from any observation onward, an actor that continuously
-has an enabled participating protocol action eventually takes one. This is weak
-fairness. It includes the pending turn write, reads and exit flag clear. A failed
-read counts as taking a step. It does not force an idle actor to start, promise
-a favorable read or bound the wait.
+## Arbitrary-n safety and capacity
 
-`CriticalCompletes` independently says that every observed critical-section
-occupant eventually performs its finishing action. Clearing the flag is a later
-action whose scheduling still needs the first premise. These are sufficient
-uniform assumptions, not a claim to be the weakest possible conditions or the
-paper's exact temporal formulas.
+The central lemma `Peterson.NProcess.level_capacity` in
+[NProcessCapacity.lean](../Peterson/NProcessCapacity.lean) says that at most
+n−k processes can be past level k without having cleared Q, for
+0 ≤ k ≤ n−1. To move a set of at
+least two processes past one level, the proof finds the last member to write
+that level's TURN. Its individually read scan must encounter another member's
+persistent high Q, so its eventual favorable TURN read witnesses an intervening
+writer outside the set. Therefore one extra process was past the preceding
+level. Induction from level zero gives capacity one at the last level, and
+`Peterson.NProcess.arbitrary_mutual_exclusion` follows. The history and scan
+lemmas derive this from actual finite traces; no snapshot or fairness premise
+is introduced. [NProcessExamples.lean](../Peterson/NProcessExamples.lean)
+includes a checked stale-read trace and all transition shapes.
 
-Without scheduling fairness, a pending process can simply be ignored. Without
-critical completion, an old occupant can remain inside forever while a peer
-waits. Even after the occupant finishes, neglecting its flag clear can keep the
-peer waiting. Such failures explain why safety cannot provide progress alone.
+## Sharp repeated overtaking
 
-## Why a pending request cannot wait forever under those premises
+The paper does not state this numeric bound. It is a derived guarantee of this
+project's precise repeated, sequentially consistent model and request boundary.
+The interval begins with the requester's flag-true write. Before its turn write,
+the true flag and a reachable-state `ReaderTurn` invariant prevent a peer from
+entering, proving `repeated_pre_turn_zero`. After the requester writes turn, a
+peer may enter once. A second peer entry would require the peer to finish,
+clear, restart, request again, and write turn again; that fresh write favors the
+still-pending requester and blocks the second entry. Finite interval lemmas in
+[Repeated/Overtaking.lean](../Peterson/Repeated/Overtaking.lean) prove the
+overall and after-turn bounds without assuming fairness. Combining the bound
+with per-request lockout gives `repeated_bounded_service` under the liveness
+premises.
 
-Suppose a request is pending but no new entry ever follows. Each process makes
-at most three shared writes during its single passage: flag true, turn, flag
-false. Thus there is a later observation after which shared memory stops
-changing. The proof derives that stable suffix; it does not assume it.
+[Repeated/OvertakingExamples.lean](../Peterson/Repeated/OvertakingExamples.lean)
+constructs an explicit 11-event execution followed by idle padding. Its theorem
+`repeated_overtaking_sharp` proves that one peer entry is attainable for both
+read orders, both requester identities, and both initial `turn` values. The
+bound counts entries, not elapsed time, total actions, or reads.
 
-On that suffix, a process cannot remain waiting to write turn or clear its flag:
-fair scheduling would force a further write. Nor can an old occupant remain,
-because it must finish and then clear its flag. The original pending request
-persists if no entry occurs, so a reader remains.
-
-If the peer flag is false, this reader has a favorable flag test. If it is true,
-the peer must be another reader. Whichever reader is opposite the fixed turn
-value has a favorable turn test. Either way, a reader has a permanently
-favorable test. Fair scheduling eventually brings it to that test, contradicting
-the supposition of no new entry.
-
-The two read orders need separate arguments. A process might already be between
-reads when memory settles, carrying an old unfavorable observation. With
-flag-first order and a now-false peer flag, its pending turn read can fail once
-before the next flag read succeeds. With turn-first order and a now-favorable
-turn, its pending flag read can fail once before the next turn read succeeds.
-The other cases succeed directly or on the following read.
-
-This short suffix argument gives no bound from the request. Memory may settle
-arbitrarily late and scheduling each read can take arbitrarily long.
-
-## What about the particular requester
-
-There is a reviewed mathematical consequence for this one-passage model, with
-no separately kernel-checked corollary claimed here. If the first new entry is
-the peer's, the original requester remains pending. Applying global progress
-again must produce the original requester's entry, since the peer cannot enter
-twice. This does not establish bounded waiting or starvation freedom for
-repeated clients. The two published claim candidates remain the exact safety
-and global progress declarations.
-
-See [verification and its limits](verification.md), or return to
-[the overview](../README.md).
+See [verification and its limits](verification.md), or return to the
+[overview](../README.md).
